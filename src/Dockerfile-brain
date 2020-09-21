@@ -1,0 +1,27 @@
+FROM ubuntu:14.04 as adnet-brain
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install --yes \
+    python3 \
+    curl \
+    unzip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install ANTs
+# We need version 2.1.0
+RUN curl -L "https://github.com/ANTsX/ANTs/releases/download/v2.1.0/Linux_Ubuntu14.04.tar.bz2" | \
+    tar xj -C "/"
+ENV ANTSPATH "/ANTs.2.1.0.Debian-Ubuntu_X64/"
+
+# Download atlas
+RUN curl -k -L -O "https://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_asym_09c_nifti.zip" && \
+    unzip "mni_icbm152_nlin_asym_09c_nifti.zip" -d "/" && \
+    rm "mni_icbm152_nlin_asym_09c_nifti.zip"
+
+
+ENTRYPOINT ["python3", "/repo/src/brain_process.py"]
+CMD ["--help"]

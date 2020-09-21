@@ -1,0 +1,4 @@
+data/
+src/__pycache__/
+out.nii.gz
+out.txt

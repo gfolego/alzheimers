@@ -1,0 +1,18 @@
+version: '3.4'
+services:
+  adnet-brain:
+    build:
+      context: src/
+      dockerfile: Dockerfile-brain
+      target: adnet-brain
+    image: adnet-brain
+    volumes:
+      - "./:/repo/"
+  adnet-cnn:
+    build:
+      context: src/
+      dockerfile: Dockerfile-cnn
+      target: adnet-cnn
+    image: adnet-cnn
+    volumes:
+      - "./:/repo/"

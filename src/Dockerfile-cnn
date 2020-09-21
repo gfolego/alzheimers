@@ -1,0 +1,30 @@
+FROM ubuntu:18.04 as adnet-cnn
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install --yes \
+    python3-pip \
+    python3-theano \
+    python3-nibabel \
+    libopenblas-dev \
+    curl \
+    unzip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install lasagne
+# We need a more recent version than apt
+RUN pip3 install --no-cache-dir \
+    "https://github.com/Lasagne/Lasagne/archive/5d3c63cb315c50b1cbd27a6bc8664b406f34dd99.zip"
+
+# Download ADNet model
+# https://dx.doi.org/10.6084/m9.figshare.11908536
+RUN curl -L -OJ "https://ndownloader.figshare.com/files/24740369" && \
+    unzip "model.zip" -d "/" && \
+    rm "model.zip"
+
+
+ENTRYPOINT ["python3", "/repo/src/cnn_process.py"]
+CMD ["--help"]
